@@ -86,60 +86,15 @@ You can now route your traffic through V2Ray or Tor depending on your needs.
 2. 对于入站协议，使用负载均衡器选择出站代理。
 3. 对于广告类域名，使用 `blocked` 出站。
 
-监听在本地的 12410 端口上 cloudflare sni 代理使用方法，客户端连接配置参考：
+连接节点
 
-```json
-{
-  "inbounds": [],
-  "outbounds": [
-    {
-      "protocol": "freedom"
-    },
-    {
-      "tag": "cf-anycast-tor",
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "armbian",
-            "port": 12410,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "7f148342a-f453-4c39-a762-019ee493237d",
-                "email": "t@t.tt"
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": true,
-          "serverName": "xxx-edgetunnel.edgetunnel.tk",
-          "fingerprint": "random"
-        },
-        "wsSettings": {
-          "path": "/?ed=2048",
-          "headers": {
-            "Host": "xxx-edgetunnel.edgetunnel.tk",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70"
-          }
-        }
-      },
-      "mux": {
-        "enabled": false,
-        "concurrency": -1
-      }
-    }
-  ]
-}
-```
+监听在本地(vps)的 12410 端口上 cloudflare sni 代理使用方法，需要在 cloudflare worker 上部署 edgetunnel 客户端连接配置参考：
 
-流量流向：
-`Your device <-> 12410 <-> tor <-> cloudflare worker <-> target`.
+![1685763386868](image/README/1685763386868.png) V2rayNG 设置图
+
+10.147.18.28 是服务器 IP 地址，12410 是 sni 代理端口，xxx-edgetunnel.edgetunnel.tk 是 cloudflare worker 的域名，需要自己部署 worker.
+
+流量流向：`Your device <-> 12410 <-> tor <-> cloudflare worker <-> target`.
 你的上网 IP 地址会完全随机，并且每个请求是来自不同国家的 cloudflare cdn 的 IP 地址。理论上，这种方式可以绕过大部分的 IP 封锁。
 
 ## Stopping the Services
