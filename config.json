@@ -34,7 +34,7 @@
          "port": 12410,
          "protocol": "dokodemo-door",
          "settings": {
-            "address": "hello-world-edgetunnel.adorabletoad.tk",
+            "address": "cloudflare-dns.com",
             "port": 443,
             "network": "tcp,udp"
          },
