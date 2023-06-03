@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xray
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: xray
+  template:
+    metadata:
+      labels:
+        app: xray
+    spec:
+      containers:
+        - name: xray
+          image: teddysun/xray
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+          volumeMounts:
+            - name: xray-config-volume
+              mountPath: /etc/xray/config.json
+              subPath: config.json
+          ports:
+            - containerPort: 12345 # xray port
+            - containerPort: 12410 # edgetunnel port
+            - containerPort: 12409 # socks5 port
+          env:
+            - name: TZ
+              value: Asia/Bangkok
+      volumes:
+        - name: xray-config-volume
+          configMap:
+            name: xray-config
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tor-proxy
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: tor-proxy
+  template:
+    metadata:
+      labels:
+        app: tor-proxy
+    spec:
+      containers:
+        - name: tor-proxy
+          image: peterdavehello/tor-socks-proxy
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+          volumeMounts:
+            - name: tor-config-volume
+              mountPath: /etc/tor/torrc
+              subPath: torrc
+          env:
+            - name: TZ
+              value: Asia/Bangkok
+      volumes:
+        - name: tor-config-volume
+          configMap:
+            name: tor-config
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: xray
+spec:
+  type: LoadBalancer
+  selector:
+    app: xray
+  ports:
+    - name: xray
+      protocol: TCP
+      port: 12345
+      targetPort: 12345
+      nodePort: 0
