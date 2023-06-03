@@ -20,7 +20,7 @@ services:
     image: peterdavehello/tor-socks-proxy
     # container_name: tor-proxy
     restart: always
-    network_mode: host
+    # network_mode: host
     volumes:
       - /root/v2ray-tor-proxy/tor:/etc/tor
     environment:

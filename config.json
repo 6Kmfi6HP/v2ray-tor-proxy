@@ -1,14 +1,17 @@
 {
    "dns": {
       "servers": [
-         "tor-proxy:8853",
+         {
+            "address": "tor-proxy",
+            "port": 8853
+         },
          "https://1.0.0.1/dns-query",
          "https://cloudflare-dns.com/dns-query",
          "https://dns.google/dns-query"
       ]
    },
    "log": {
-      "loglevel": "none"
+      "loglevel": "warning"
    },
    "inbounds": [
       {
