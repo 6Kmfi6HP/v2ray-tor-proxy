@@ -126,7 +126,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 9150
                }
             ]
@@ -138,7 +138,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38801
                }
             ]
@@ -150,7 +150,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38802
                }
             ]
@@ -162,7 +162,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38803
                }
             ]
@@ -174,7 +174,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38804
                }
             ]
@@ -186,7 +186,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38805
                }
             ]
@@ -198,7 +198,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38806
                }
             ]
@@ -210,7 +210,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38807
                }
             ]
@@ -222,7 +222,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38808
                }
             ]
@@ -234,7 +234,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38809
                }
             ]
@@ -246,7 +246,7 @@
          "settings": {
             "servers": [
                {
-                  "address": "xray",
+                  "address": "tor-proxy",
                   "port": 38810
                }
             ]
