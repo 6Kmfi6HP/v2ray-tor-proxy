@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  xray:
+    image: teddysun/xray
+    deploy:
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 512M
+      replicas: 3 # 在此处添加 replicas 设置
+    volumes:
+      - /root/v2ray-tor-proxy/config.json:/etc/xray/config.json
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - "12345:12345" # xray port
+      - "12410:12410" # edgetunnel port
+      - "12409:12409" # socks5 port
+    logging:
+      options:
+        max-size: 5m
+  tor-proxy:
+    image: peterdavehello/tor-socks-proxy
+    deploy:
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 256M
+      replicas: 5 # 在此处添加 replicas 设置
+    volumes:
+      - /root/v2ray-tor-proxy/tor:/etc/tor
+    environment:
+      - TZ=Asia/Bangkok
+    logging:
+      options:
+        max-size: 5m
