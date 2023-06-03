@@ -14,7 +14,7 @@ services:
     environment:
       - TZ=Asia/Bangkok
     ports:
-      - "12345:12345" # xray port
+      - "0.0.0.0:12345:12345" # xray port
       - "12410:12410" # edgetunnel port
       - "12409:12409" # socks5 port
     logging:
