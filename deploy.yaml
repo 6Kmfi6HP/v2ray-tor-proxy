@@ -44,7 +44,7 @@ kind: Deployment
 metadata:
   name: tor-proxy
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: tor-proxy
@@ -93,7 +93,7 @@ kind: Deployment
 metadata:
   name: cloudflared
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: cloudflared
@@ -140,6 +140,16 @@ spec:
       protocol: TCP
       port: 12345
       targetPort: 12345
+      nodePort: 0
+    - name: edgetunnel
+      protocol: TCP
+      port: 12410
+      targetPort: 12410
+      nodePort: 0
+    - name: socks5
+      protocol: TCP
+      port: 12409
+      targetPort: 12409
       nodePort: 0
 ---
 kind: Service
