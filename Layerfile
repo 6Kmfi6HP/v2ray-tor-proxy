@@ -16,8 +16,8 @@ RUN apt-get update && \
 #     chmod +x /usr/local/bin/docker-compose
 
 # copy the root (i.e., repository root) to /root in the runner
-COPY . .
-
+COPY . /root/v2ray-tor-proxy
+WORKDIR /root/v2ray-tor-proxy
 # TODO: log in to docker hub
 # See https://webapp.io/docs/advanced-workflows#logging-in-to-docker to learn how to log in to docker
 
