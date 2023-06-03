@@ -1,0 +1,19 @@
+HardwareAccel 1
+Log notice stdout
+DataDirectory /var/lib/tor
+DNSPort 0.0.0.0:8853
+SocksPort 0.0.0.0:9150
+SOCKSPort 0.0.0.0:38801
+SOCKSPort 0.0.0.0:38802
+SOCKSPort 0.0.0.0:38803
+SOCKSPort 0.0.0.0:38804
+SOCKSPort 0.0.0.0:38805
+SOCKSPort 0.0.0.0:38806
+SOCKSPort 0.0.0.0:38807
+SOCKSPort 0.0.0.0:38808
+SOCKSPort 0.0.0.0:38809
+SOCKSPort 0.0.0.0:38810
+NewCircuitPeriod 30
+CircuitBuildTimeout 10
+StrictExitNodes 1
+ExcludeExitNodes {us},{de},{fr},{nl},{ca},{ru},{se},{gb},{pl},{ir}

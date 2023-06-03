@@ -1,0 +1,30 @@
+version: "3.4"
+services:
+  xray:
+    image: teddysun/xray
+    # container_name: vless-tor
+    restart: always
+    # network_mode: host
+    volumes:
+      - /root/v2ray-tor-proxy/config.json:/etc/xray/config.json
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - "12345:12345" # xray port
+      - "12410:12410" # edgetunnel port
+      - "12409:12409" # socks5 port
+    logging:
+      options:
+        max-size: 5m
+  tor-proxy:
+    image: peterdavehello/tor-socks-proxy
+    # container_name: tor-proxy
+    restart: always
+    network_mode: host
+    volumes:
+      - /root/v2ray-tor-proxy/tor:/etc/tor
+    environment:
+      - TZ=Asia/Bangkok
+    logging:
+      options:
+        max-size: 5m

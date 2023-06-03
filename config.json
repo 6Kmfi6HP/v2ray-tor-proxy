@@ -1,0 +1,296 @@
+{
+   "dns": {
+      "servers": [
+         "tor-proxy:8853",
+         "https://1.0.0.1/dns-query",
+         "https://cloudflare-dns.com/dns-query",
+         "https://dns.google/dns-query"
+      ]
+   },
+   "log": {
+      "loglevel": "none"
+   },
+   "inbounds": [
+      {
+         "port": 12409,
+         "protocol": "socks",
+         "settings": {
+            "auth": "password",
+            "accounts": [
+               {
+                  "user": "user",
+                  "pass": "pass"
+               }
+            ],
+            "udp": true,
+            "ip": "127.0.0.1"
+         },
+         "tag": "socks_inbound_proxy"
+      },
+      {
+         "port": 12410,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "hello-world-edgetunnel.adorabletoad.tk",
+            "port": 443,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel"
+      },
+      {
+         "port": 12345,
+         "tag": "tcp-vless",
+         "protocol": "vless",
+         "settings": {
+            "clients": [
+               {
+                  "id": "b72dc4c7-0fb5-8099-1c81-adffdeb9d65c",
+                  "flow": "xtls-rprx-vision"
+               }
+            ],
+            "decryption": "none",
+            "fallbacks": [
+               {
+                  "dest": 3001
+               },
+               {
+                  "path": "/ws",
+                  "dest": 3002
+               }
+            ]
+         },
+         "streamSettings": {
+            "network": "tcp"
+         }
+      },
+      {
+         "port": 3001,
+         "tag": "vless",
+         "listen": "127.0.0.1",
+         "protocol": "vless",
+         "settings": {
+            "clients": [
+               {
+                  "id": "b72dc4c7-0fb5-8099-1c81-adffdeb9d65c"
+               }
+            ],
+            "decryption": "none"
+         },
+         "streamSettings": {
+            "network": "ws",
+            "security": "none"
+         }
+      },
+      {
+         "port": 3002,
+         "tag": "ws-vless",
+         "listen": "127.0.0.1",
+         "protocol": "vless",
+         "settings": {
+            "clients": [
+               {
+                  "id": "b72dc4c7-0fb5-8099-1c81-adffdeb9d65c",
+                  "level": 0
+               }
+            ],
+            "decryption": "none"
+         },
+         "streamSettings": {
+            "network": "ws",
+            "security": "none",
+            "wsSettings": {
+               "path": "/ws"
+            }
+         },
+         "sniffing": {
+            "enabled": true,
+            "destOverride": [
+               "http",
+               "tls"
+            ],
+            "metadataOnly": false
+         }
+      }
+   ],
+   "outbounds": [
+      {
+         "protocol": "freedom"
+      },
+      {
+         "protocol": "blackhole",
+         "tag": "blocked"
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_9150",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 9150
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38801",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38801
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38802",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38802
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38803",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38803
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38804",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38804
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38805",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38805
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38806",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38806
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38807",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38807
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38808",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38808
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38809",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38809
+               }
+            ]
+         }
+      },
+      {
+         "protocol": "socks",
+         "tag": "socks_outbound_tor_38810",
+         "settings": {
+            "servers": [
+               {
+                  "address": "xray",
+                  "port": 38810
+               }
+            ]
+         }
+      }
+   ],
+   "routing": {
+      "balancers": [
+         {
+            "tag": "tor-socks-lb",
+            "selector": [
+               "socks_outbound_tor_9150",
+               "socks_outbound_tor_38801",
+               "socks_outbound_tor_38802",
+               "socks_outbound_tor_38803",
+               "socks_outbound_tor_38804",
+               "socks_outbound_tor_38805",
+               "socks_outbound_tor_38806",
+               "socks_outbound_tor_38807",
+               "socks_outbound_tor_38808",
+               "socks_outbound_tor_38809",
+               "socks_outbound_tor_38810"
+            ]
+         }
+      ],
+      "rules": [
+         {
+            "type": "field",
+            "balancerTag": "tor-socks-lb",
+            "inboundTag": [
+               "ws-vless",
+               "tcp-vless",
+               "vless",
+               "socks_inbound_proxy",
+               "cf_inbound_edgetunnel"
+            ]
+         },
+         {
+            "type": "field",
+            "outboundTag": "blocked",
+            "domain": [
+               "geosite:category-ads-all"
+            ]
+         }
+      ]
+   }
+}
