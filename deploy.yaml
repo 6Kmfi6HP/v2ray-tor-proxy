@@ -68,6 +68,7 @@ spec:
               mountPath: /etc/tor/torrc
               subPath: torrc
           ports:
+            - containerPort: 8853
             - containerPort: 9150
             - containerPort: 38801
             - containerPort: 38802
@@ -102,3 +103,48 @@ spec:
       port: 12345
       targetPort: 12345
       nodePort: 0
+---
+kind: Service
+metadata:
+  name: tor-proxy
+spec:
+  selector:
+    app: tor-proxy
+  ports:
+    - name: dns-8853
+      port: 8853
+      targetPort: 8853
+    - name: socks5-9150
+      port: 9150
+      targetPort: 9150
+    - name: socks5-38801
+      port: 38801
+      targetPort: 38801
+    - name: socks5-38802
+      port: 38802
+      targetPort: 38802
+    - name: socks5-38803
+      port: 38803
+      targetPort: 38803
+    - name: socks5-38804
+      port: 38804
+      targetPort: 38804
+    - name: socks5-38805
+      port: 38805
+      targetPort: 38805
+    - name: socks5-38806
+      port: 38806
+      targetPort: 38806
+    - name: socks5-38807
+      port: 38807
+      targetPort: 38807
+    - name: socks5-38808
+      port: 38808
+      targetPort: 38808
+    - name: socks5-38809
+      port: 38809
+      targetPort: 38809
+    - name: socks5-38810
+      port: 38810
+      targetPort: 38810
+  type: ClusterIP
