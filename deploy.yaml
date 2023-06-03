@@ -67,6 +67,18 @@ spec:
             - name: tor-config-volume
               mountPath: /etc/tor/torrc
               subPath: torrc
+          ports:
+            - containerPort: 9150
+            - containerPort: 38801
+            - containerPort: 38802
+            - containerPort: 38803
+            - containerPort: 38804
+            - containerPort: 38805
+            - containerPort: 38806
+            - containerPort: 38807
+            - containerPort: 38808
+            - containerPort: 38809
+            - containerPort: 38810
           env:
             - name: TZ
               value: Asia/Bangkok
