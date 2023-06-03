@@ -87,6 +87,44 @@ spec:
         - name: tor-config-volume
           configMap:
             name: tor-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+          args:
+            - tunnel
+            - --edge-ip-version
+            - auto
+            - run
+          env:
+            - name: TZ
+              value: Asia/Bangkok # 你可以根据需要替换时区
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cf-tunnel-token
+                  key: TUNNEL_TOKEN_VALUE
 
 ---
 kind: Service

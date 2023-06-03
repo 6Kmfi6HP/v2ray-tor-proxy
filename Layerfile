@@ -1,5 +1,6 @@
 FROM vm/ubuntu:18.04
-
+SECRET ENV TUNNEL_TOKEN_VALUE
+RUN echo "secret is: $TUNNEL_TOKEN_VALUE"
 # install docker-ce (from tutorial for ubuntu)
 RUN apt-get update && \
   apt-get install ca-certificates curl gnupg lsb-release && \
@@ -22,6 +23,7 @@ WORKDIR /root/v2ray-tor-proxy
 RUN systemctl restart k3s
 RUN kubectl create configmap xray-config --from-file=config.json=/root/v2ray-tor-proxy/config.json
 RUN kubectl create configmap tor-config --from-file=torrc=/root/v2ray-tor-proxy/tor/torrc
+RUN kubectl create secret generic cf-tunnel-token --from-literal=TUNNEL_TOKEN_VALUE=$TUNNEL_TOKEN_VALUE
 RUN k3s kubectl apply -f deploy.yaml
 # TODO: log in to docker hub
 # See https://webapp.io/docs/advanced-workflows#logging-in-to-docker to learn how to log in to docker
