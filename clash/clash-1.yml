@@ -1,0 +1,417 @@
+mixed-port: 7890
+allow-lan: true
+mode: rule
+log-level: info
+ipv6: true
+external-controller: 0.0.0.0:9090
+global-client-fingerprint: random
+find-process-mode: strict
+tcp-concurrent: true
+hosts:
+  # '*.clash.dev': 127.0.0.1
+  # '.dev': 127.0.0.1
+  # 'alpha.clash.dev': '::1'
+  # test.com: [1.1.1.1, 2.2.2.2]
+  # clash.lan: clash # clash 为特别字段，将加入本地所有网卡的地址
+  # baidu.com: google.com # 只允许配置一个别名
+
+profile: # 存储 select 选择记录
+  store-selected: true
+  # 持久化 fake-ip
+  store-fake-ip: true
+experimental:
+  ignore-resolve-fail: true
+  sniff-tls-sni: true
+dns:
+  enabled: true
+  ipv6: true
+  prefer-h3: true # 开启 DoH 支持 HTTP/3，将并发尝试
+  listen: 0.0.0.0:53
+  enhanced-mode: redir-host
+  use-hosts: true # 查询 hosts 文件
+  default-nameserver:
+    - 8.8.8.8
+    - 8.8.4.4
+  nameserver:
+    - 8.8.8.8
+    - 8.8.4.4
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
+  fallback:
+    - https://dns.nextdns.io/54b85e
+    - https://b713fbc9.d.adguard-dns.com/dns-query
+    - https://blitz.ahadns.com/1:1.2.3.4.5.6.7.8.9.10.11.17.20.21.23.26
+    - https://doh.libredns.gr/noads
+    - https://freedns.controld.com/p2
+    - https://doh-sg.blahdns.com/dns-query
+
+# 添加 proxy-providers 部分
+proxy-providers:
+  # edgetunnel not udp
+  edgetunnel:
+    type: http
+    path: ./edgetunnel.yaml
+    url: https://gitlab.com/edgetunnel.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      interval: 600
+      url: http://cp.cloudflare.com/generate_204
+
+  # my_provider has udp
+  my_provider:
+    type: http
+    url: https://gitlab.com/providers.yaml
+    path: ./providers.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      interval: 600
+      url: http://cp.cloudflare.com/generate_204
+
+  # 可爱蛙机场
+  airport:
+    type: http
+    url: https://gitlab.com/airport.yaml
+    path: ./airport.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      interval: 600
+      url: http://cp.cloudflare.com/generate_204
+
+  # WARP-PLUS
+  warp_plus_wg:
+    type: http
+    url: https://gitlab.com/warp.yaml
+    path: ./warp.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      interval: 600
+      url: http://cp.cloudflare.com/generate_204
+
+  # reverse-proxy
+  reverse-proxy:
+    type: http
+    url: https://gitlab.com/reverse-proxy.yaml
+    path: ./reverse-proxy.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      interval: 600
+      url: http://192.168.88.252:8080
+
+  # global-edgetunnel
+  global-edgetunnel:
+    type: http
+    url: https://gitlab.com/global-edgetunnel.yaml
+    path: ./global-edgetunnel.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      interval: 600
+      url: http://cp.cloudflare.com/generate_204
+
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ⚖️ 负载均衡-轮询
+      - ⚖️ 负载均衡-散列
+      - ⚖️ 负载均衡-粘性
+      - ♻️ 自动选择
+      - ☁️ EdgeTunnel
+      - ☁️ EdgeTunnel-lb
+      - 😐 WARP-PLUS
+      - 🎲 MY-PROVIDER
+      - 🎲 MY-PROVIDER-lb
+      - ✈️ 可爱蛙机场
+      - 🎈 reverse-proxy-lb
+      - 🐔 gcore-edgetunnel-lb
+      - 🐔 gcore-edgetunnel
+      - 🎈 reverse-proxy
+      - 🔗 代理链 <-> edgetunnel - gcore
+      - 🔗 代理链 <-> edgetunnel - reverse-proxy
+      - 🔗 代理链 <-> my_provider - gcore
+      - 🔗 代理链 <-> my_provider - reverse-proxy
+      - 🔗 代理链 <-> 轮询 - gcore
+      - 🔗 代理链 <-> 轮询 - reverse-proxy
+      - DIRECT
+  # 代理链，目前relay可以支持udp的只有vmess/vless/trojan/ss/ssr/tuic
+  # wireguard目前不支持在relay中使用，请使用proxy中的dialer-proxy配置项
+  # Traffic: clash <-> http <-> vmess <-> ss1 <-> ss2 <-> Internet
+  - name: 🔗 代理链 <-> edgetunnel - gcore
+    type: relay
+    proxies:
+      - ☁️ EdgeTunnel-lb
+      - 🐔 gcore-edgetunnel-lb
+    disable-udp: true
+  - name: 🔗 代理链 <-> edgetunnel - reverse-proxy
+    type: relay
+    proxies:
+      - ☁️ EdgeTunnel-lb
+      - 🎈 reverse-proxy-lb
+    disable-udp: true
+  - name: 🔗 代理链 <-> my_provider - gcore
+    type: relay
+    proxies:
+      - 🎲 MY-PROVIDER-lb
+      - 🐔 gcore-edgetunnel-lb
+  - name: 🔗 代理链 <-> my_provider - reverse-proxy
+    type: relay
+    proxies:
+      - 🎲 MY-PROVIDER-lb
+      - 🎈 reverse-proxy-lb
+  - name: 🔗 代理链 <-> 轮询 - gcore
+    type: relay
+    proxies:
+      - ⚖️ 负载均衡-轮询
+      - 🐔 gcore-edgetunnel-lb
+    disable-udp: true
+  - name: 🔗 代理链 <-> 轮询 - reverse-proxy
+    type: relay
+    proxies:
+      - ⚖️ 负载均衡-轮询
+      - 🎈 reverse-proxy-lb
+    disable-udp: true
+  - name: ✈️ 可爱蛙机场
+    type: select
+    use:
+      - airport
+
+  - name: 😐 WARP-PLUS
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: round-robin
+    use:
+      - warp_plus_wg
+
+  - name: 🎈 reverse-proxy-lb
+    type: load-balance
+    url: http://192.168.88.252:8080
+    interval: 300
+    strategy: round-robin
+    use:
+      - reverse-proxy
+  - name: 🎈 reverse-proxy
+    type: url-test
+    url: http://192.168.88.252:8080
+    interval: 300
+    tolerance: 50
+    use:
+      - reverse-proxy
+  - name: ☁️ EdgeTunnel
+    type: url-test
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    tolerance: 50
+    use:
+      - edgetunnel
+
+  - name: ☁️ EdgeTunnel-lb
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: round-robin
+    use:
+      - edgetunnel
+
+  - name: 🎲 MY-PROVIDER
+    type: url-test
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    tolerance: 50
+    use:
+      - my_provider
+  - name: 🎲 MY-PROVIDER-lb
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: round-robin
+    use:
+      - my_provider
+  - name: 🐔 gcore-edgetunnel
+    type: url-test
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    tolerance: 50
+    use:
+      - global-edgetunnel
+  - name: 🐔 gcore-edgetunnel-lb
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: round-robin
+    use:
+      - global-edgetunnel
+
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    tolerance: 50
+    use:
+      - my_provider
+      - edgetunnel
+      - warp_plus_wg
+
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - ♻️ 自动选择
+
+  - name: 🛑 全球拦截
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - ♻️ 自动选择
+
+  - name: ⚖️ 负载均衡-散列
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: consistent-hashing
+    use:
+      - my_provider
+      - edgetunnel
+
+  - name: ⚖️ 负载均衡-轮询
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: round-robin
+    use:
+      - my_provider
+      - edgetunnel
+
+  - name: ⚖️ 负载均衡-粘性
+    type: load-balance
+    url: http://cp.cloudflare.com/generate_204
+    interval: 300
+    strategy: sticky-sessions
+    use:
+      - my_provider
+      - edgetunnel
+
+rules:
+  - IP-CIDR,192.168.88.0/24,🎈 reverse-proxy-lb
+  - IP-CIDR,192.168.2.0/24,🎈 reverse-proxy-lb
+  - IP-CIDR,192.168.1.0/24,🎲 MY-PROVIDER-lb
+  - DOMAIN-SUFFIX,ip6-localhost,🎯 全球直连
+  - DOMAIN-SUFFIX,ip6-loopback,🎯 全球直连
+  - DOMAIN-SUFFIX,lan,🎯 全球直连
+  - DOMAIN-SUFFIX,local,🎯 全球直连
+  - DOMAIN-SUFFIX,localhost,🎯 全球直连
+  - RULE-SET,reject,🛑 全球拦截
+  - RULE-SET,proxy,🐟 漏网之鱼
+  - RULE-SET,direct,🚀 节点选择
+  - RULE-SET,private,🚀 节点选择
+  - RULE-SET,gfw,🚀 节点选择
+  - RULE-SET,tld-not-cn,🚀 节点选择
+  - RULE-SET,telegramcidr,🚀 节点选择
+  - RULE-SET,cncidr,🚀 节点选择
+  - RULE-SET,lancidr,🚀 节点选择
+  - RULE-SET,applications,🚀 节点选择
+  - MATCH,🐟 漏网之鱼
+
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
