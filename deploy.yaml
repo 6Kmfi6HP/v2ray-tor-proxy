@@ -19,9 +19,6 @@ spec:
             limits:
               cpu: "1"
               memory: "512Mi"
-            requests:
-              cpu: "0.25"
-              memory: "512Mi"
           volumeMounts:
             - name: xray-config-volume
               mountPath: /etc/xray/config.json
@@ -56,7 +53,7 @@ kind: Deployment
 metadata:
   name: tor-proxy
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: tor-proxy
@@ -71,9 +68,6 @@ spec:
           resources:
             limits:
               cpu: "1"
-              memory: "512Mi"
-            requests:
-              cpu: "0.25"
               memory: "512Mi"
           volumeMounts:
             - name: tor-config-volume
@@ -121,9 +115,6 @@ spec:
           resources:
             limits:
               cpu: "1"  
-              memory: "512Mi"
-            requests:
-              cpu: "0.25"  
               memory: "512Mi"
           args:
             - tunnel
