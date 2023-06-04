@@ -30,6 +30,18 @@ spec:
             - containerPort: 12345 # xray port
             - containerPort: 12410 # edgetunnel port
             - containerPort: 12409 # socks5 port
+            - containerPort: 12411
+            - containerPort: 12412
+            - containerPort: 12413
+            - containerPort: 12414
+            - containerPort: 12415
+            - containerPort: 12416
+            - containerPort: 12417
+            - containerPort: 12418
+            - containerPort: 12419
+            - containerPort: 12420
+            - containerPort: 12421
+
           env:
             - name: TZ
               value: Asia/Bangkok
@@ -125,6 +137,41 @@ spec:
                 secretKeyRef:
                   name: cf-tunnel-token
                   key: TUNNEL_TOKEN_VALUE
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "1"
+              memory: "512Mi"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
 
 ---
 kind: Service
@@ -137,49 +184,64 @@ spec:
     app: xray
   ports:
     - name: xray
+      protocol: TCP
       port: 12345
       targetPort: 12345
       nodePort: 0
-    - name: edgetunnel-port-12410
-      port: 12410
-      targetPort: 12410
     - name: socks5
+      protocol: TCP
       port: 12409
       targetPort: 12409
       nodePort: 0
-    - name: edgetunnel-port-12411
+    - name: edgetunnel
+      protocol: TCP
       port: 12410
+      targetPort: 12410
+      nodePort: 0
+    # Add new ports (12411-12421)
+    - name: custom-port-12411
+      port: 12411
+      protocol: TCP
       targetPort: 12411
-    - name: edgetunnel-port-12412
-      port: 12410
+    - name: custom-port-12412
+      protocol: TCP
+      port: 12412
       targetPort: 12412
-    - name: edgetunnel-port-12413
-      port: 12410
+    - name: custom-port-12413
+      protocol: TCP
+      port: 12413
       targetPort: 12413
-    - name: edgetunnel-port-12414
-      port: 12410
+    - name: custom-port-12414
+      protocol: TCP
+      port: 12414
       targetPort: 12414
-    - name: edgetunnel-port-12415
-      port: 12410
+    - name: custom-port-12415
+      protocol: TCP
+      port: 12415
       targetPort: 12415
-    # http port
-    - name: edgetunnel-port-12416
-      port: 12411
+    - name: custom-port-12416
+      protocol: TCP
+      port: 12416
       targetPort: 12416
-    - name: edgetunnel-port-12417
-      port: 12411
+    - name: custom-port-12417
+      protocol: TCP
+      port: 12417
       targetPort: 12417
-    - name: edgetunnel-port-12418
-      port: 12411
+    - name: custom-port-12418
+      protocol: TCP
+      port: 12418
       targetPort: 12418
-    - name: edgetunnel-port-12419
-      port: 12411
+    - name: custom-port-12419
+      protocol: TCP
+      port: 12419
       targetPort: 12419
-    - name: edgetunnel-port-12420
-      port: 12411
+    - name: custom-port-12420
+      protocol: TCP
+      port: 12420
       targetPort: 12420
-    - name: edgetunnel-port-12421
-      port: 12411
+    - name: custom-port-12421
+      protocol: TCP
+      port: 12421
       targetPort: 12421
 ---
 kind: Service
@@ -226,4 +288,20 @@ spec:
     - name: socks5-38810
       port: 38810
       targetPort: 38810
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: nginx-port-https
+      port: 12510
+      targetPort: 12510
+    - name: nginx-port-http
+      port: 12511
+      targetPort: 12511
   type: ClusterIP

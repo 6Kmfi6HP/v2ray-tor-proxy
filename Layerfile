@@ -23,6 +23,7 @@ WORKDIR /root/v2ray-tor-proxy
 RUN systemctl restart k3s
 RUN kubectl create configmap xray-config --from-file=config.json=/root/v2ray-tor-proxy/config.json
 RUN kubectl create configmap tor-config --from-file=torrc=/root/v2ray-tor-proxy/tor/torrc
+RUN kubectl create configmap nginx-config --from-file=nginx.conf=/root/v2ray-tor-proxy/nginx/nginx.conf
 RUN kubectl create secret generic cf-tunnel-token --from-literal=TUNNEL_TOKEN_VALUE=$TUNNEL_TOKEN_VALUE
 RUN k3s kubectl apply -f deploy.yaml
 # TODO: log in to docker hub
