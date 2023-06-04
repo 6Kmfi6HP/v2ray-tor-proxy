@@ -401,6 +401,7 @@
       }
    ],
    "routing": {
+      "domainStrategy": "IPIfNonMatch",
       "balancers": [
          {
             "tag": "tor-socks-lb",
