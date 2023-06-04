@@ -173,6 +173,10 @@
                {
                   "path": "/vless",
                   "dest": 3003
+               },
+               {
+                  "path": "/vmess",
+                  "dest": 3004
                }
             ]
          },
@@ -247,6 +251,34 @@
             "security": "none",
             "wsSettings": {
                "path": "/vless"
+            }
+         },
+         "sniffing": {
+            "enabled": true,
+            "destOverride": [
+               "http",
+               "tls"
+            ],
+            "metadataOnly": false
+         }
+      },
+      {
+         "port": 3004,
+         "tag": "vmess",
+         "listen": "127.0.0.1",
+         "protocol": "vmess",
+         "settings": {
+            "clients": [
+               {
+                  "id": "b72dc4c7-0fb5-8099-1c81-adffdeb9d65c",
+                  "alterId": 0
+               }
+            ]
+         },
+         "streamSettings": {
+            "network": "ws",
+            "wsSettings": {
+               "path": "/vmess"
             }
          },
          "sniffing": {
@@ -428,6 +460,7 @@
                "ws-vless",
                "tcp-vless",
                "vless",
+               "vmess",
                "socks_inbound_proxy",
                "cf_inbound_edgetunnel",
                "cf_inbound_edgetunnel_8443",
