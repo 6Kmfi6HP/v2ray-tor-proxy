@@ -175,8 +175,8 @@
                   "dest": 3003
                },
                {
-                  "path": "/edge",
-                  "dest": 12410
+                  "path": "/cdn-cgi",
+                  "dest": 12416
                }
             ]
          },
