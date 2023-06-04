@@ -41,6 +41,116 @@
          "tag": "cf_inbound_edgetunnel"
       },
       {
+         "port": 12411,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 8443,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_8443"
+      },
+      {
+         "port": 12412,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2053,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_2053"
+      },
+      {
+         "port": 12413,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2096,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_2096"
+      },
+      {
+         "port": 12414,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2087,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_2087"
+      },
+      {
+         "port": 12415,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2083,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_2083"
+      },
+      {
+         "port": 12416,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 80,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_http"
+      },
+      {
+         "port": 12417,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 8080,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_http_8080"
+      },
+      {
+         "port": 12418,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 8880,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_http_8880"
+      },
+      {
+         "port": 12419,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2052,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_http_2052"
+      },
+      {
+         "port": 12420,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2086,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_http_2086"
+      },
+      {
+         "port": 12421,
+         "protocol": "dokodemo-door",
+         "settings": {
+            "address": "cloudflare-dns.com",
+            "port": 2082,
+            "network": "tcp,udp"
+         },
+         "tag": "cf_inbound_edgetunnel_http_2082"
+      },
+      {
          "port": 12345,
          "tag": "tcp-vless",
          "protocol": "vless",
@@ -59,6 +169,14 @@
                {
                   "path": "/ws",
                   "dest": 3002
+               },
+               {
+                  "path": "/vless",
+                  "dest": 3003
+               },
+               {
+                  "path": "/edge",
+                  "dest": 12410
                }
             ]
          },
@@ -103,6 +221,36 @@
             "security": "none",
             "wsSettings": {
                "path": "/ws"
+            }
+         },
+         "sniffing": {
+            "enabled": true,
+            "destOverride": [
+               "http",
+               "tls"
+            ],
+            "metadataOnly": false
+         }
+      },
+      {
+         "port": 3003,
+         "tag": "direct-vless",
+         "listen": "127.0.0.1",
+         "protocol": "vless",
+         "settings": {
+            "clients": [
+               {
+                  "id": "b72dc4c7-0fb5-8099-1c81-adffdeb9d65c",
+                  "level": 0
+               }
+            ],
+            "decryption": "none"
+         },
+         "streamSettings": {
+            "network": "ws",
+            "security": "none",
+            "wsSettings": {
+               "path": "/vless"
             }
          },
          "sniffing": {
@@ -284,7 +432,18 @@
                "tcp-vless",
                "vless",
                "socks_inbound_proxy",
-               "cf_inbound_edgetunnel"
+               "cf_inbound_edgetunnel",
+               "cf_inbound_edgetunnel_8443",
+               "cf_inbound_edgetunnel_2053",
+               "cf_inbound_edgetunnel_2096",
+               "cf_inbound_edgetunnel_2087",
+               "cf_inbound_edgetunnel_2083",
+               "cf_inbound_edgetunnel_http",
+               "cf_inbound_edgetunnel_http_8080",
+               "cf_inbound_edgetunnel_http_8880",
+               "cf_inbound_edgetunnel_http_2052",
+               "cf_inbound_edgetunnel_http_2086",
+               "cf_inbound_edgetunnel_http_2082"
             ]
          },
          {
