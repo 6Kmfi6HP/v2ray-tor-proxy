@@ -17,8 +17,11 @@ spec:
           image: teddysun/xray
           resources:
             limits:
-              cpu: "1"
-              memory: "512Mi"
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.25"
+              memory: "256Mi"
           volumeMounts:
             - name: xray-config-volume
               mountPath: /etc/xray/config.json
@@ -67,8 +70,11 @@ spec:
           image: peterdavehello/tor-socks-proxy
           resources:
             limits:
-              cpu: "1"
-              memory: "512Mi"
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.25"
+              memory: "256Mi"
           volumeMounts:
             - name: tor-config-volume
               mountPath: /etc/tor/torrc
@@ -97,34 +103,37 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflared 
+  name: cloudflared
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: cloudflared  
+      app: cloudflared
   template:
     metadata:
       labels:
-        app: cloudflared  
+        app: cloudflared
     spec:
-      hostNetwork: true  # 添加此选项
+      hostNetwork: true # 添加此选项
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared
           resources:
             limits:
-              cpu: "1"  
-              memory: "512Mi"
+              cpu: "0.5"
+              memory: "256Mi"
+            requests:
+              cpu: "0.25"
+              memory: "256Mi"
           args:
             - tunnel
             - --edge-ip-version
             - auto
             - run
           env:
-            - name: TZ  
-              value: Asia/Bangkok 
-            - name: TUNNEL_TOKEN  
+            - name: TZ
+              value: Asia/Bangkok
+            - name: TUNNEL_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: cf-tunnel-token
@@ -149,11 +158,11 @@ spec:
 #           image: nginx:latest
 #           resources:
 #             limits:
-#               cpu: "1"
-#               memory: "512Mi"
+#               cpu: "0.5"
+#               memory: "256Mi"
 #             requests:
-#               cpu: "1"
-#               memory: "512Mi"
+#               cpu: "0.5"
+#               memory: "256Mi"
 #           ports:
 #             - containerPort: 80
 #           volumeMounts:
