@@ -137,41 +137,41 @@ spec:
                 secretKeyRef:
                   name: cf-tunnel-token
                   key: TUNNEL_TOKEN_VALUE
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-        - name: nginx
-          image: nginx:latest
-          resources:
-            limits:
-              cpu: "1"
-              memory: "512Mi"
-            requests:
-              cpu: "1"
-              memory: "512Mi"
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: nginx-conf
-              mountPath: /etc/nginx/conf.d/nginx.conf
-              subPath: nginx.conf
-      volumes:
-        - name: nginx-conf
-          configMap:
-            name: nginx-conf
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nginx
+# spec:
+#   replicas: 3
+#   selector:
+#     matchLabels:
+#       app: nginx
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx
+#     spec:
+#       containers:
+#         - name: nginx
+#           image: nginx:latest
+#           resources:
+#             limits:
+#               cpu: "1"
+#               memory: "512Mi"
+#             requests:
+#               cpu: "1"
+#               memory: "512Mi"
+#           ports:
+#             - containerPort: 80
+#           volumeMounts:
+#             - name: nginx-conf
+#               mountPath: /etc/nginx/conf.d/nginx.conf
+#               subPath: nginx.conf
+#       volumes:
+#         - name: nginx-conf
+#           configMap:
+#             name: nginx-conf
 
 ---
 kind: Service
@@ -207,6 +207,7 @@ spec:
       protocol: TCP
       port: 12412
       targetPort: 12412
+      nodePort: 0
     - name: custom-port-12413
       protocol: TCP
       port: 12413
@@ -289,19 +290,19 @@ spec:
       port: 38810
       targetPort: 38810
   type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  selector:
-    app: nginx
-  ports:
-    - name: nginx-port-https
-      port: 12510
-      targetPort: 12510
-    - name: nginx-port-http
-      port: 12511
-      targetPort: 12511
-  type: ClusterIP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nginx-service
+# spec:
+#   selector:
+#     app: nginx
+#   ports:
+#     - name: nginx-port-https
+#       port: 12510
+#       targetPort: 12510
+#     - name: nginx-port-http
+#       port: 12511
+#       targetPort: 12511
+#   type: ClusterIP
