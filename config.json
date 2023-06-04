@@ -173,10 +173,6 @@
                {
                   "path": "/vless",
                   "dest": 3003
-               },
-               {
-                  "path": "/cdn-cgi",
-                  "dest": 12416
                }
             ]
          },

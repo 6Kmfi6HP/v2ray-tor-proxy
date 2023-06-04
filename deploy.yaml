@@ -250,6 +250,7 @@ apiVersion: v1
 metadata:
   name: tor-proxy
 spec:
+  type: LoadBalancer
   selector:
     app: tor-proxy
   ports:
@@ -289,7 +290,6 @@ spec:
     - name: socks5-38810
       port: 38810
       targetPort: 38810
-  type: ClusterIP
 # ---
 # apiVersion: v1
 # kind: Service

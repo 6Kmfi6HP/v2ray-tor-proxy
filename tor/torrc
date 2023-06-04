@@ -15,5 +15,5 @@ SOCKSPort 0.0.0.0:38809
 SOCKSPort 0.0.0.0:38810
 NewCircuitPeriod 30
 CircuitBuildTimeout 10
-StrictExitNodes 1
+# StrictExitNodes 1
 # ExcludeExitNodes {us},{de},{fr},{nl},{ca},{ru},{se},{gb},{pl},{ir}
