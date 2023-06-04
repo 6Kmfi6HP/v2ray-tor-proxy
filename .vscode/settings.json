@@ -1,5 +1,5 @@
 {
     "yaml.schemas": {
-        "kubernetes://schema/v1%40service": "file:///d%3A/github/v2ray-tor-proxy/v2ray-tor-proxy/deploy.yaml"
+        "kubernetes://schema/apps/v1%40deployment": "file:///d%3A/github/v2ray-tor-proxy/v2ray-tor-proxy/deploy.yaml"
     }
 }
