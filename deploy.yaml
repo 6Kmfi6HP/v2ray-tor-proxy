@@ -20,7 +20,7 @@ spec:
               cpu: "1"
               memory: "512Mi"
             requests:
-              cpu: "1"
+              cpu: "0.25"
               memory: "512Mi"
           volumeMounts:
             - name: xray-config-volume
@@ -73,7 +73,7 @@ spec:
               cpu: "1"
               memory: "512Mi"
             requests:
-              cpu: "1"
+              cpu: "0.25"
               memory: "512Mi"
           volumeMounts:
             - name: tor-config-volume
@@ -105,7 +105,7 @@ kind: Deployment
 metadata:
   name: cloudflared 
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: cloudflared  
@@ -123,7 +123,7 @@ spec:
               cpu: "1"  
               memory: "512Mi"
             requests:
-              cpu: "1"  
+              cpu: "0.25"  
               memory: "512Mi"
           args:
             - tunnel
