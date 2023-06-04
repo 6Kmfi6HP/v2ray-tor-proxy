@@ -103,26 +103,27 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflared
+  name: cloudflared 
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: cloudflared
+      app: cloudflared  
   template:
     metadata:
       labels:
-        app: cloudflared
+        app: cloudflared  
     spec:
+      hostNetwork: true  # 添加此选项
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared
           resources:
             limits:
-              cpu: "1"
+              cpu: "1"  
               memory: "512Mi"
             requests:
-              cpu: "1"
+              cpu: "1"  
               memory: "512Mi"
           args:
             - tunnel
@@ -130,9 +131,9 @@ spec:
             - auto
             - run
           env:
-            - name: TZ
-              value: Asia/Bangkok # 你可以根据需要替换时区
-            - name: TUNNEL_TOKEN
+            - name: TZ  
+              value: Asia/Bangkok 
+            - name: TUNNEL_TOKEN  
               valueFrom:
                 secretKeyRef:
                   name: cf-tunnel-token
