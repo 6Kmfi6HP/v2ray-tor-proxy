@@ -12,7 +12,7 @@ V2Ray-Tor-Proxy is a simple, easy-to-deploy solution for routing your internet t
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/3Kmfi6HP/v2ray-tor-proxy
+git clone https://github.com/6Kmfi6HP/v2ray-tor-proxy
 ```
 
 2. Change to the cloned directory:
